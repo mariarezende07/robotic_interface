@@ -32,6 +32,17 @@ define((require, exports, module) => {
       }
     }
   }
+  
+  const clawGui = gui.addFolder("Claw movement");
+  clawGui.open();
+  let clawState = false;
+  clawGui.domElement.addEventListener("click", () => {
+    
+    clawState = !clawState;
+    console.log(clawState);
+  });
+
+  
 
   const anglesDeg = {
     A0: 0,

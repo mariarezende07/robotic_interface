@@ -9,8 +9,8 @@ define((require, exports, module) => {
   const geo = [
     [0, 0, 5],
     [0, 0, 5],
-    [1, 0, 2],
-    [12.6, 0, 0],
+    [0, 0, 3],
+    [5, 0, 0],
     [3.6, 0, 0],
     [0, 0, 0],
   ]
@@ -79,6 +79,7 @@ define((require, exports, module) => {
         y: geo[4][1],
         z: geo[4][2],
       },
+      
     },
   }
   const robotStore = storeManager.createStore('Robot', defaultRobotState)
@@ -227,7 +228,6 @@ define((require, exports, module) => {
         A2: angles[2],
         A3: angles[3],
         A4: angles[4],
-        A5: angles[5],
       },
     }, {
       jointOutOfBound: [...outOfBounds],
@@ -286,7 +286,6 @@ define((require, exports, module) => {
         A2: angles[2],
         A3: angles[3],
         A4: angles[4],
-        A5: angles[5],
       },
       configuration: [...data],
       jointOutOfBound: [...outOfBounds],
