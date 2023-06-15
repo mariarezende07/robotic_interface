@@ -46,6 +46,6 @@ function parse_angles_message(message) {
     servo_2: message.readUInt16LE(4),
     servo_3: message.readUInt16LE(6),
     servo_4: message.readUInt16LE(8),
-    servo_5: message.readUInt16LE(10),
+    claw: message.readUInt16LE(10),
   };
 }
