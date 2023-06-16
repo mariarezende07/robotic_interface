@@ -98,7 +98,7 @@ define((require, exports, module) => {
       mappedValue += 1301;
     }
     else if (angle_name == "A2") {
-      mappedValue -= 909;
+      mappedValue += 1700;
     }
     else if (angle_name == "A3") {
       mappedValue += 1407;

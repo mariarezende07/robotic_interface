@@ -11,8 +11,8 @@ define((require, exports, module) => {
     [0, 0, 2 / k],
     [0, 0, 6 / k],
     [0, 0, 6 / k],
-    [2 / k, 0, 0],
-    [2 / k, 0, 0],
+    [0, 0, 2 / k],
+    [0, 0, 2 / k],
     [0, 0, 0],
   ]
   const defaultRobotState = {
@@ -23,8 +23,8 @@ define((require, exports, module) => {
         z: 10,
       },
       rotation: {
-        x: 0,
-        y: Math.PI,
+        x: Math.PI,
+        y: 0,
         z: 0,
       },
     },
@@ -34,19 +34,19 @@ define((require, exports, module) => {
         0,
       A1
         :
-        0.01695494217225324,
+        -0.2990205039175944,
       A2
         :
-        0.5471955800439234,
+        1.3073425920203032,
       A3
         :
         0,
       A4
         :
-        1.0066458045787208,
+        2.1332705654870843,
       A5
         :
-        0,
+        0
     },
     jointOutOfBound: [false, false, false, false, false, false],
     maxAngleVelocities: {
@@ -58,7 +58,7 @@ define((require, exports, module) => {
       J5: maxAngleVelocity,
     },
     jointLimits: {
-      J0: [0 / 180 * Math.PI, 359 / 180 * Math.PI],
+      J0: [5 / 180 * Math.PI, 359 / 180 * Math.PI],
       J1: [-58 / 180 * Math.PI, 122 / 180 * Math.PI],
       J2: [-83 / 180 * Math.PI, 93 / 180 * Math.PI],
       J3: [-135 / 180 * Math.PI, 47 / 180 * Math.PI],
