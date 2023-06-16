@@ -39,6 +39,7 @@ wss.on("connection", (ws, req) => {
   ws.on("message", (message) => {
     parsed_angles = parse_angles_message(message);
 
+    console.log(parsed_angles);
     if (espClient != null) {
       espClient.send(message);
     }

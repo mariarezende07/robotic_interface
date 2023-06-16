@@ -40,7 +40,7 @@ define((require, exports, module) => {
 
     clawState = !clawState;
     anglesDegScaled.A5 = clawState * 1000 + 1000;
-    console.log(clawState);
+    
   });
 
 
@@ -82,45 +82,49 @@ define((require, exports, module) => {
     angle = angle % 360;
 
     if (angle_name == "A1" || angle_name == "A4") {
-      console.log("CHANGING ANGLE")
+      
       angle = -angle;
     }
     // Map the angle to the scale of 0 to 999
     var mappedValue = Math.floor((angle / 180) * 1900);
-    console.log(mappedValue);
+    
 
     mappedValue += 500;
     if (angle_name == "A0") {
       mappedValue = 999 * angle / 360;
     }
     else if (angle_name == "A1") {
-      mappedValue += 570;
+      mappedValue += 0;
     }
     else if (angle_name == "A2") {
-      mappedValue += 842;
+      mappedValue += 0;
     }
     else if (angle_name == "A3") {
-      mappedValue += 1363;
+      mappedValue += 0;
     }
     else if (angle_name == "A4") {
-      mappedValue += 1067;
+      mappedValue += 0;
 
     }
     else if (angle_name == "A5") {
-      mappedValue += 1039;
+      mappedValue += 0;
     }
     return mappedValue
   }
 
+  
+  let stateChange = false;
   robotStore.listen([(state) => state.angles], (angles) => {
     Object.keys(anglesDeg).forEach((k) => {
       anglesDeg[k] = (angles[k] / Math.PI) * 180;
       if (k != "A5") {
+        
         anglesDegScaled[k] = mapAngleToScale(anglesDeg[k], k);
+        stateChange=true;
       }
     });
   });
-
+  
   const anglesGui = gui.addFolder("angles");
   let i = 0;
   for (const key in anglesDeg) {
@@ -183,7 +187,7 @@ define((require, exports, module) => {
   }
   /*  START WEB SOCKET */
   const web_socket_server = new WebSocket("ws://192.168.15.5:9000/");
-  console.log("ANGLES DEGREE SCALED", anglesDegScaled);
+  
   function send_angles_message(anglesDegScaled) {
     const message_buffer = new ArrayBuffer(12);
     const message = new Uint16Array(message_buffer);
@@ -196,12 +200,19 @@ define((require, exports, module) => {
 
     web_socket_server.send(message);
   }
+  
 
   web_socket_server.onopen = (event) => {
     console.log("Stablished a connection sucessfuly");
     setInterval(() => {
-      send_angles_message(anglesDegScaled);
-    }, 2000);
+
+      
+      if (stateChange){
+        send_angles_message(anglesDegScaled);
+        stateChange = false;
+      }
+
+    }, 500);
   };
 
   /* END DAT GUI */
