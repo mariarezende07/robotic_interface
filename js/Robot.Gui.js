@@ -39,7 +39,8 @@ define((require, exports, module) => {
   clawGui.domElement.addEventListener("click", () => {
 
     clawState = !clawState;
-    anglesDegScaled.A5 = clawState * 1000 + 1000;
+    anglesDegScaled.A5 = clawState * 1000 + 400;
+    stateChange=true;
     
   });
 
@@ -81,7 +82,7 @@ define((require, exports, module) => {
     // Ensure the angle is within the range of 0 to 360 degrees
     angle = angle % 360;
 
-    if (angle_name == "A1" || angle_name == "A4") {
+    if (angle_name == "A2") {
       
       angle = -angle;
     }
@@ -94,20 +95,20 @@ define((require, exports, module) => {
       mappedValue = 999 * angle / 360;
     }
     else if (angle_name == "A1") {
-      mappedValue += 0;
+      mappedValue += 1301;
     }
     else if (angle_name == "A2") {
-      mappedValue += 0;
+      mappedValue -= 909;
     }
     else if (angle_name == "A3") {
-      mappedValue += 0;
+      mappedValue += 1407;
     }
     else if (angle_name == "A4") {
-      mappedValue += 0;
+      mappedValue += 975;
 
     }
     else if (angle_name == "A5") {
-      mappedValue += 0;
+      mappedValue += 1304;
     }
     return mappedValue
   }
@@ -206,7 +207,7 @@ define((require, exports, module) => {
     console.log("Stablished a connection sucessfuly");
     setInterval(() => {
 
-      
+      console.log("COMPARISON", stateChange)
       if (stateChange){
         send_angles_message(anglesDegScaled);
         stateChange = false;

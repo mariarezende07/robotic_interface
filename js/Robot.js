@@ -6,34 +6,47 @@ define((require, exports, module) => {
     jointOutOfBound: [false, false, false, false, false, false],
   }
   const maxAngleVelocity = 90.0 / (180.0 * Math.PI) / 1000.0
+  const k = 1;
   const geo = [
-    [0, 0, 5],
-    [0, 0, 5],
-    [1, 0, 2],
-    [12.6, 0, 0],
-    [3.6, 0, 0],
+    [0, 0, 2 / k],
+    [0, 0, 6 / k],
+    [0, 0, 6 / k],
+    [2 / k, 0, 0],
+    [2 / k, 0, 0],
     [0, 0, 0],
   ]
   const defaultRobotState = {
     target: {
       position: {
-        x: 10,
-        y: 10,
+        x: 5,
+        y: 0,
         z: 10,
       },
       rotation: {
-        x: Math.PI,
-        y: 0,
+        x: 0,
+        y: Math.PI,
         z: 0,
       },
     },
     angles: {
-      A0: 0,
-      A1: 0,
-      A2: 0,
-      A3: 0,
-      A4: 0,
-      A5: 0,
+      A0
+        :
+        0,
+      A1
+        :
+        0.01695494217225324,
+      A2
+        :
+        0.5471955800439234,
+      A3
+        :
+        0,
+      A4
+        :
+        1.0066458045787208,
+      A5
+        :
+        0,
     },
     jointOutOfBound: [false, false, false, false, false, false],
     maxAngleVelocities: {
@@ -46,11 +59,11 @@ define((require, exports, module) => {
     },
     jointLimits: {
       J0: [0 / 180 * Math.PI, 359 / 180 * Math.PI],
-      J1: [-54 / 180 * Math.PI, 126 / 180 * Math.PI],
-      J2: [-80 / 180 * Math.PI, 101 / 180 * Math.PI],
-      J3: [-130 / 180 * Math.PI, 51 / 180 * Math.PI],
-      J4: [-100 / 180 * Math.PI, 80 / 180 * Math.PI],
-      J5: [-0 / 180 * Math.PI, 0 / 180 * Math.PI],
+      J1: [-58 / 180 * Math.PI, 122 / 180 * Math.PI],
+      J2: [-83 / 180 * Math.PI, 93 / 180 * Math.PI],
+      J3: [-135 / 180 * Math.PI, 47 / 180 * Math.PI],
+      J4: [-88 / 180 * Math.PI, 92 / 180 * Math.PI],
+      J5: [-190 / 180 * Math.PI, 190 / 180 * Math.PI],
     },
     configuration: [false, false, false],
     geometry: {
@@ -82,7 +95,9 @@ define((require, exports, module) => {
     },
   }
   const robotStore = storeManager.createStore('Robot', defaultRobotState)
-
+  robotStore.listen([state => state.position], (position) => {
+    console.log("POSTION", position);
+  })
   let IK
 
   function updateIK(geometry) {
@@ -94,7 +109,6 @@ define((require, exports, module) => {
   robotStore.listen([state => state.geometry], (geometry) => {
     updateIK(geometry)
   })
-
   const calculateAngles = (jointLimits, position, rotation, configuration) => {
     const angles = []
     IK.calculateAngles(
@@ -266,9 +280,11 @@ define((require, exports, module) => {
     const {
       outOfBounds,
     } = calculateAngles(state.jointLimits, state.target.position, state.target.rotation, state.configuration)
-    return { ...state,
+    return {
+      ...state,
       jointOutOfBound: [...outOfBounds],
-      jointLimits: { ...state.jointLimits,
+      jointLimits: {
+        ...state.jointLimits,
         ...data,
       },
     }
