@@ -18,7 +18,20 @@ wss.on("connection", (ws, req) => {
   console.log("Received a New Connection");
   if (req.headers.authorization == ESP_SECRET_ID) {
     espClient = ws;
-    console.log("Esp connected");
+    console.log("Esp connected with ip " + req.socket.remoteAddress);
+
+    espClient.on("close", (reasonCode, description)=>{
+      console.log("ESP CAUI");
+      console.log(reasonCode);
+      console.log(description.toString());
+      espClient = null;
+    })
+
+    espClient.on("error", (error)=>{
+      console.log("ESP CAUI");
+      console.log(error);
+      espClient = null;
+    })
 
     return;
   }
@@ -29,8 +42,6 @@ wss.on("connection", (ws, req) => {
     if (espClient != null) {
       espClient.send(message);
     }
-    console.log("received message");
-    console.log(parsed_angles);
   });
 
   ws.on("close", () => {

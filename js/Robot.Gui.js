@@ -201,7 +201,7 @@ define((require, exports, module) => {
     console.log("Stablished a connection sucessfuly");
     setInterval(() => {
       send_angles_message(anglesDegScaled);
-    }, 200);
+    }, 2000);
   };
 
   /* END DAT GUI */
