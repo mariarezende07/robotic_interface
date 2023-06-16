@@ -45,12 +45,12 @@ define((require, exports, module) => {
       J5: maxAngleVelocity,
     },
     jointLimits: {
-      J0: [-190 / 180 * Math.PI, 190 / 180 * Math.PI],
-      J1: [-90 / 180 * Math.PI, 90 / 180 * Math.PI],
-      J2: [-135 / 180 * Math.PI, 45 / 180 * Math.PI],
-      J3: [-90 / 180 * Math.PI, 75 / 180 * Math.PI],
-      J4: [-139 / 180 * Math.PI, 90 / 180 * Math.PI],
-      J5: [-188 / 180 * Math.PI, 181 / 180 * Math.PI],
+      J0: [0 / 180 * Math.PI, 359 / 180 * Math.PI],
+      J1: [-54 / 180 * Math.PI, 126 / 180 * Math.PI],
+      J2: [-80 / 180 * Math.PI, 101 / 180 * Math.PI],
+      J3: [-130 / 180 * Math.PI, 51 / 180 * Math.PI],
+      J4: [-100 / 180 * Math.PI, 80 / 180 * Math.PI],
+      J5: [-0 / 180 * Math.PI, 0 / 180 * Math.PI],
     },
     configuration: [false, false, false],
     geometry: {

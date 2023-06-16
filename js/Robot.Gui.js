@@ -32,17 +32,18 @@ define((require, exports, module) => {
       }
     }
   }
-  
+
   const clawGui = gui.addFolder("Claw movement");
   clawGui.open();
   let clawState = false;
   clawGui.domElement.addEventListener("click", () => {
-    
+
     clawState = !clawState;
+    anglesDegScaled.A5 = clawState * 1000 + 1000;
     console.log(clawState);
   });
 
-  
+
 
   const anglesDeg = {
     A0: 0,
@@ -54,12 +55,12 @@ define((require, exports, module) => {
   };
 
   const anglesDegScaled = {
-    A0: 0,
-    A1: 0,
-    A2: 0,
-    A3: 0,
-    A4: 0,
-    A5: 0,
+    A0: 1500,
+    A1: 1500,
+    A2: 1500,
+    A3: 1500,
+    A4: 1500,
+    A5: 1500,
   };
 
   const configuration = {
@@ -76,21 +77,47 @@ define((require, exports, module) => {
     J4: [-139, 20],
     J5: [-188, 181],
   };
-  function mapAngleToScale(angle) {
+  function mapAngleToScale(angle, angle_name) {
     // Ensure the angle is within the range of 0 to 360 degrees
     angle = angle % 360;
 
+    if (angle_name == "A1" || angle_name == "A4") {
+      console.log("CHANGING ANGLE")
+      angle = -angle;
+    }
     // Map the angle to the scale of 0 to 999
-    var mappedValue = Math.floor((angle / 360) * 1000);
-    mappedValue = (mappedValue + 1000) % 1000;
+    var mappedValue = Math.floor((angle / 180) * 1900);
+    console.log(mappedValue);
 
-    return mappedValue + 1000;
+    mappedValue += 500;
+    if (angle_name == "A0") {
+      mappedValue = 999 * angle / 360;
+    }
+    else if (angle_name == "A1") {
+      mappedValue += 570;
+    }
+    else if (angle_name == "A2") {
+      mappedValue += 842;
+    }
+    else if (angle_name == "A3") {
+      mappedValue += 1363;
+    }
+    else if (angle_name == "A4") {
+      mappedValue += 1067;
+
+    }
+    else if (angle_name == "A5") {
+      mappedValue += 1039;
+    }
+    return mappedValue
   }
 
   robotStore.listen([(state) => state.angles], (angles) => {
     Object.keys(anglesDeg).forEach((k) => {
       anglesDeg[k] = (angles[k] / Math.PI) * 180;
-      anglesDegScaled[k] = mapAngleToScale(anglesDeg[k]);
+      if (k != "A5") {
+        anglesDegScaled[k] = mapAngleToScale(anglesDeg[k], k);
+      }
     });
   });
 
@@ -155,17 +182,17 @@ define((require, exports, module) => {
     }
   }
   /*  START WEB SOCKET */
-  const web_socket_server = new WebSocket("ws://192.168.15.6:9000/");
+  const web_socket_server = new WebSocket("ws://192.168.15.5:9000/");
   console.log("ANGLES DEGREE SCALED", anglesDegScaled);
   function send_angles_message(anglesDegScaled) {
     const message_buffer = new ArrayBuffer(12);
     const message = new Uint16Array(message_buffer);
-    message[0] = anglesDegScaled.A0;
-    message[1] = anglesDegScaled.A1;
-    message[2] = anglesDegScaled.A2;
-    message[3] = anglesDegScaled.A3;
-    message[4] = anglesDegScaled.A4;
-    message[5] = anglesDegScaled.A5;
+    message[5] = anglesDegScaled.A0;
+    message[4] = anglesDegScaled.A1;
+    message[3] = anglesDegScaled.A2;
+    message[2] = anglesDegScaled.A3;
+    message[1] = anglesDegScaled.A4;
+    message[0] = anglesDegScaled.A5;
 
     web_socket_server.send(message);
   }
