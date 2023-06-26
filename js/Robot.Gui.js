@@ -37,14 +37,10 @@ define((require, exports, module) => {
   clawGui.open();
   let clawState = false;
   clawGui.domElement.addEventListener("click", () => {
-
     clawState = !clawState;
     anglesDegScaled.A5 = clawState * 1000 + 400;
-    stateChange=true;
-    
+    stateChange = true;
   });
-
-
 
   const anglesDeg = {
     A0: 0,
@@ -78,61 +74,59 @@ define((require, exports, module) => {
     J4: [-139, 20],
     J5: [-188, 181],
   };
+
+  function hasNaNValue(obj) {
+    for (const key in obj) {
+      if (isNaN(obj[key])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   function mapAngleToScale(angle, angle_name) {
     // Ensure the angle is within the range of 0 to 360 degrees
     angle = angle % 360;
 
     if (angle_name == "A2") {
-      
       angle = -angle;
     }
     // Map the angle to the scale of 0 to 999
     var mappedValue = Math.floor((angle / 180) * 1900);
-    
 
     mappedValue += 500;
     if (angle_name == "A0") {
-      mappedValue = 999 * angle / 360;
-    }
-    else if (angle_name == "A1") {
+      mappedValue = (999 * angle) / 360;
+    } else if (angle_name == "A1") {
       mappedValue += 1301;
-    }
-    else if (angle_name == "A2") {
+    } else if (angle_name == "A2") {
       mappedValue += 1700;
-    }
-    else if (angle_name == "A3") {
+    } else if (angle_name == "A3") {
       mappedValue += 1407;
-    }
-    else if (angle_name == "A4") {
+    } else if (angle_name == "A4") {
       mappedValue += 975;
-
-    }
-    else if (angle_name == "A5") {
+    } else if (angle_name == "A5") {
       mappedValue += 1304;
     }
-    return mappedValue
+    return mappedValue;
   }
 
-  
   let stateChange = false;
   robotStore.listen([(state) => state.angles], (angles) => {
     Object.keys(anglesDeg).forEach((k) => {
       anglesDeg[k] = (angles[k] / Math.PI) * 180;
       if (k != "A5") {
-        
         anglesDegScaled[k] = mapAngleToScale(anglesDeg[k], k);
-        stateChange=true;
+        stateChange = true;
       }
     });
   });
-  
+
   const anglesGui = gui.addFolder("angles");
   let i = 0;
   for (const key in anglesDeg) {
     anglesGui
       .add(anglesDeg, key)
-      .min(jointLimits[`J${i}`][0] * RAD_TO_DEG)
-      .max(jointLimits[`J${i++}`][1] * RAD_TO_DEG)
       .step(1)
       .listen()
       .onChange(() => {
@@ -188,7 +182,7 @@ define((require, exports, module) => {
   }
   /*  START WEB SOCKET */
   const web_socket_server = new WebSocket("ws://192.168.15.5:9000/");
-  
+
   function send_angles_message(anglesDegScaled) {
     const message_buffer = new ArrayBuffer(12);
     const message = new Uint16Array(message_buffer);
@@ -201,18 +195,17 @@ define((require, exports, module) => {
 
     web_socket_server.send(message);
   }
-  
 
   web_socket_server.onopen = (event) => {
     console.log("Stablished a connection sucessfuly");
     setInterval(() => {
-
-      console.log("COMPARISON", stateChange)
-      if (stateChange){
-        send_angles_message(anglesDegScaled);
-        stateChange = false;
+      console.log("COMPARISON", stateChange);
+      if (stateChange) {
+        if (!hasNaNValue(anglesDegScaled)) {
+          send_angles_message(anglesDegScaled);
+          stateChange = false;
+        }
       }
-
     }, 500);
   };
 
