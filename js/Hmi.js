@@ -109,27 +109,7 @@ define((require, exports, module) => {
 
       /* DAT GUI */
 
-      const hmiGui = gui.addFolder('HMI')
-      gui.remember(scope.state)
-
-      const fun = {
-        resetTargetAngles: () => {
-          Robot.dispatch('ROBOT_CHANGE_ANGLES', {
-            A0: 0,
-            A1: 0,
-            A2: 0,
-            A3: 0,
-            A4: 0,
-            A5: 0,
-          })
-        },
-      }
-
-      hmiGui.add(fun, 'resetTargetAngles').onChange(() => {
-
-      })
-      window.debug.show = false
-      hmiGui.add(window.debug, 'show')
+      
 
       /* CONNECT MODULES */
     }

@@ -12,26 +12,7 @@ define((require, exports, module) => {
   const RAD_TO_DEG = 180 / Math.PI;
   /* DAT GUI */
 
-  const geometryGui = gui.addFolder("robot geometry");
-
-  for (const link in geometry) {
-    if (link) {
-      const linkFolder = geometryGui.addFolder(`link ${link}`);
-      for (const axis in geometry[link]) {
-        if (axis) {
-          gui.remember(geometry[link]);
-          linkFolder
-            .add(geometry[link], axis)
-            .min(-10)
-            .max(10)
-            .step(0.1)
-            .onChange(() => {
-              robotStore.dispatch("ROBOT_CHANGE_GEOMETRY", geometry);
-            });
-        }
-      }
-    }
-  }
+  
 
   const clawGui = gui.addFolder("Claw movement");
   clawGui.open();
@@ -140,46 +121,9 @@ define((require, exports, module) => {
       });
   }
 
-  const configurationGui = gui.addFolder("configuration");
-  for (const key in configuration) {
-    configurationGui
-      .add(configuration, key)
-      .listen()
-      .onChange(() => {
-        robotStore.dispatch(
-          "ROBOT_CHANGE_CONFIGURATION",
-          Object.values(configuration)
-        );
-      });
-  }
+  
 
-  const angleLimitGui = anglesGui.addFolder("angle limits");
-  for (const joint in jointLimitsDeg) {
-    if (joint) {
-      const jointFolder = angleLimitGui.addFolder(`joint ${joint}`);
-      for (const limit in jointLimitsDeg[joint]) {
-        if (limit) {
-          // gui.remember(jointLimitsDeg[joint])
-
-          ((j) =>
-            jointFolder
-              .add(jointLimitsDeg[j], limit)
-              .name(limit == 0 ? "min" : "max")
-              .min(-360)
-              .max(360)
-              .step(1)
-              .onChange(() => {
-                limts_rad = {};
-                limts_rad[j] = [
-                  jointLimitsDeg[j][0] * DEG_TO_RAD,
-                  jointLimitsDeg[j][1] * DEG_TO_RAD,
-                ];
-                robotStore.dispatch("ROBOT_CHANGE_JOINT_LIMITS", limts_rad);
-              }))(joint);
-        }
-      }
-    }
-  }
+  
   /*  START WEB SOCKET */
   const web_socket_server = new WebSocket("ws://192.168.15.5:9000/");
 

@@ -180,35 +180,7 @@ define((require, exports, module) => {
     }
   })
 
-  const workingSpaceGUI = gui.addFolder('working space')
-
-  workingSpaceGUI.add(guiHelper, 'show').onChange(() => {
-    workingSpaceStore.dispatch('CHANGE_VISIBILITY', guiHelper.show)
-  })
-  workingSpaceGUI.add(guiHelper, 'step').min(0.1).max(5).step(0.1).onChange(() => {
-    workingSpaceStore.dispatch('CHANGE_STEP', guiHelper.step)
-  })
-
-  const fun = {
-    addPose() {
-
-    },
-    clearPoses() {
-
-    },
-  }
-
-  workingSpaceGUI.add(fun, 'addPose').onChange(() => {
-    workingSpaceStore.dispatch('ADD_POSE_TO_EULER', {
-      rx: robotStore.getState().target.rotation.x,
-      ry: robotStore.getState().target.rotation.y,
-      rz: robotStore.getState().target.rotation.z,
-      color: 0xffffff * (0.6 + 0.4 * Math.random()), // brighter colors
-    })
-  })
-  workingSpaceGUI.add(fun, 'clearPoses').onChange(() => {
-    workingSpaceStore.dispatch('REMOVE_POSES', {})
-  })
+  
 
   module.exports = function test() {
     console.log('todo')
